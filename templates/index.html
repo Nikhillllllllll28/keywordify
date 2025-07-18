@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>KeyWordify</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Bootstrap & Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="container py-4">
+  <!-- Header with Logo and Toggle -->
+  <div class="d-flex justify-content-between align-items-center mb-4 fade-slide-in">
+    <div class="d-flex align-items-center">
+      <img src="{{ url_for('static', filename='logo.png') }}" id="logo" alt="KeyWordify Logo" class="logo-img me-3">
+      <div>
+        <h1 class="mb-1"></h1>
+        
+      </div>
+    </div>
+    <div class="form-check form-switch">
+      <input class="form-check-input" type="checkbox" id="themeToggle">
+      <label class="form-check-label" for="themeToggle"><i class="bi bi-moon-stars-fill"></i></label>
+    </div>
+  </div>
+
+  <!-- Input Form -->
+  <div class="card shadow p-4 mb-4 fade-slide-in">
+    <form method="post">
+      <div class="mb-3">
+        <label for="text" class="form-label"><strong>Paste your research content here:</strong></label>
+        <textarea class="form-control" id="text" name="text" rows="8" placeholder="Enter article, paragraph or paper...">{{ text }}</textarea>
+      </div>
+      <div class="text-center">
+        <button type="submit" class="btn btn-primary px-4">Extract Keywords</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Keyword Results -->
+  {% if keywords %}
+  <div class="card shadow p-4 mb-4 fade-slide-in">
+    <h4 class="mb-3"><i class="bi bi-pin-angle-fill text-danger"></i> Extracted Keywords</h4>
+    <div class="row">
+      {% for score, phrase in keywords %}
+      <div class="col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="alert alert-success d-flex justify-content-between align-items-center shadow-sm keyword-fade">
+          <span class="text-capitalize fw-medium">{{ phrase }}</span>
+          <span class="badge bg-dark">Score: {{ "%.2f"|format(score) }}</span>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endif %}
+
+  <!-- Footer -->
+  <footer class="text-center text-muted mt-4">
+    <p>Built by Nikhil Mishra · July 2025 · Flask + RAKE NLP</p>
+  </footer>
+</div>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  const toggle = document.getElementById('themeToggle');
+  const body = document.body;
+
+  // Load saved theme
+  if (localStorage.getItem("theme") === "dark") {
+    body.classList.add("dark-mode");
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener('change', () => {
+    toggle.classList.add("bounce-on-toggle");
+    setTimeout(() => toggle.classList.remove("bounce-on-toggle"), 400);
+    if (toggle.checked) {
+      body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    } else {
+      body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+    }
+  });
+</script>
+</body>
+</html>
